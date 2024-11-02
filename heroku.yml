@@ -1,0 +1,9 @@
+build:
+  docker:
+    web: Dockerfile
+
+release:
+  command: "java -jar app.jar"
+
+run:
+  web: "java -jar app.jar"
