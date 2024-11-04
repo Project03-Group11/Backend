@@ -20,11 +20,13 @@ public class UserController {
     @PostMapping("/add")
     public User addUser(@RequestBody Map<String,String> body) {
         String email = body.get("email");
+        String username = body.get("username");
+        String profile_pic = body.get("profile_pic");
         User existingUser = userRepository.findByEmail(email);
         if(existingUser != null){
             return null;
         }
-        User newUser = new User(email);
+        User newUser = new User(email,username, profile_pic);
         userRepository.save(newUser);
         return newUser;
     }
@@ -63,8 +65,8 @@ public class UserController {
             if(body.containsKey("username")){
                 currUser.setUsername(body.get("username"));
             }
-            if(body.containsKey("profilePic")){
-                currUser.setProfilePic(body.get("profilePic"));
+            if(body.containsKey("profile_pic")){
+                currUser.setProfilePic(body.get("profile_pic"));
             }
 
             userRepository.save(currUser);
