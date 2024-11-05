@@ -15,12 +15,7 @@ public class User{
     public User() {
     }
 
-    public User (String email) {
-        this.email = email;
-    }
-
-    public User (int id, String email, String username, String profile_pic) {
-        this.id = id;
+    public User (String email, String username, String profile_pic) {
         this.email = email;
         this.username = username;
         this.profile_pic = profile_pic;
