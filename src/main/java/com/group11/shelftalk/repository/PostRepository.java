@@ -2,8 +2,6 @@ package com.group11.shelftalk.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.group11.shelftalk.models.*;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository <Post, Integer>{
