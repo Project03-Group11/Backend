@@ -13,9 +13,6 @@ public class ShelftalkApplication {
 		SpringApplication.run(ShelftalkApplication.class, args);
 	}
 
-	@RequestMapping("/")
-	public String Start() {
-		return "We are running";
-	}
+	
 
 }
