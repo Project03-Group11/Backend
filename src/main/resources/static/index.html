@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/css2?family=Anta&display=swap" rel="stylesheet">
+</head>
+
+
+
+  <body>
+    <nav>
+      <h1 id="title"><img id="die" src="img/dice3D.png"> RANDOM DICE GAME <img id="die" src="img/dice3D.png"> </h1>
+      <p id="instructions">Roll random number. Everytime your number is higher than the AI's, the checkbox moves one spot closer to victory. If the checkbox reaches the X, you lose.</p>
+    </nav>
+    <label>
+      Enter how much you're willing to gamble: 
+      <input id="gamble" type="number">
+    </label>
+    <button id="bet">Submit</button>
+    <br>
+    <p>After entering amount of money to gamble, a multiplier of x2, x4, or x6 will be randomly chosen.</p>
+    <div>
+    <h1 id="result"></h1>
+      </div>
+    <br>
+    <div id="row">
+      <div id="bID">
+      <label id="balance">Balance: 10000</label> 
+        </div>
+      <div>
+        <!-- <label id="wins">Wins:</label>  -->
+        <!-- <br> -->
+        <label>Your Dice</label>
+        <label id="meRoll"></label>
+        <br>
+        <div>
+          <img id="dice" src="img/dice1.jpg">
+          <img id="dice2" src="img/dice1.jpg">
+        </div>
+      </div>
+      <img id="arrow" style= display:none>
+
+      <div>
+        <label>AI Dice</label>
+        <label id="aiRoll"></label>
+        <br>
+        <div>
+          <img id="dice3" src="img/dice1.jpg">
+          <img id="dice4" src="img/dice1.jpg">
+        </div>
+      </div>
+      
+      <div id="wl">
+        <label id="wins">Wins: 0</label> 
+        <br>
+        <label id="losses">Losses: 0</label> 
+          </div>
+
+    </div>
+    
+
+
+    <br>
+    <button id="roll">Roll Dice</button>
+    <button id="reset" style= display:none>Play Again</button>
+    <div id="lines">
+      <img id="win" src="img/trophy.png">
+      <p id="p1">_</p>
+      <p id="p2">_</p>
+      <p id="p3">☑</p>
+      <p id="p4">_</p>
+      <p id="p5">_</p>
+      <img id="lose" src="img/wrong.png">
+    </div>
+
+
+<script>
+    document.querySelector("#roll").addEventListener("click", roll);
+document.querySelector("#reset").addEventListener("click", reset);
+document.querySelector("#bet").addEventListener("click", gamble);
+
+let place = 3;
+let resultMe = 99;
+let resultAI = 99;
+let balance = 10000;
+let wins = 0;
+let losses = 0;
+let betting = 0;
+let isBetting = 0;
+
+
+
+function roll() {
+  let dices = ["dice1", "dice2", "dice3", "dice4", "dice5", "dice6"];
+  let random = Math.floor(Math.random() * 6) + 1;
+  let random2 = Math.floor(Math.random() * 6) + 1;
+  let diceShow = dices[random - 1];
+  let diceShow2 = dices[random2 - 1];
+  document.getElementById("dice").src = `img/${diceShow}.jpg`;
+  document.getElementById("dice2").src = `img/${diceShow2}.jpg`;
+  resultMe = random + random2;
+  document.querySelector("#meRoll").innerText = `: ${resultMe}`;
+  botRoll();
+}
+
+function botRoll() {
+  let dices = ["dice1", "dice2", "dice3", "dice4", "dice5", "dice6"];
+  let random = Math.floor(Math.random() * 6) + 1;
+  let random2 = Math.floor(Math.random() * 6) + 1;
+  let diceShow = dices[random - 1];
+  let diceShow2 = dices[random2 - 1];
+  resultAI = random + random2;
+  document.querySelector("#aiRoll").innerText = `: ${resultAI}`;
+  document.getElementById("dice3").src = `img/${diceShow}.jpg`;
+  document.getElementById("dice4").src = `img/${diceShow2}.jpg`;
+  game();
+}
+function game() {
+  if (resultMe > resultAI) {
+    place--;
+    // console.log(place);
+    mePoint();
+    document.querySelector("#arrow").style.display = "inline";
+    document.querySelector("#arrow").src = 'img/left.png';
+  } else if (resultAI > resultMe) {
+    place++;
+    // console.log(place);
+    document.querySelector("#arrow").src = 'img/right.png';
+    document.querySelector("#arrow").style.display = "inline";
+    mePoint();
+  } else if (resultAI == resultMe) {
+    document.querySelector("#arrow").src = 'img/equal.png';
+    document.querySelector("#arrow").style.display = "inline";
+  }
+}
+
+function mePoint() {
+  if (place == 0) {
+    document.querySelector("#p1").innerText = "_";
+    win();
+  } else if (place == 6) {
+    document.querySelector("#p5").innerText = "_";
+    lose();
+  } else {
+    if (place == 1) {
+      document.querySelector("#p1").innerText = "☑";
+      document.querySelector("#p2").innerText = "_";
+    } else if (place == 2) {
+      document.querySelector("#p2").innerText = "☑";
+      document.querySelector("#p1").innerText = "_";
+      document.querySelector("#p3").innerText = "_";
+    } else if (place == 3) {
+      document.querySelector("#p3").innerText = "☑";
+      document.querySelector("#p2").innerText = "_";
+      document.querySelector("#p4").innerText = "_";
+    } else if (place == 4) {
+      document.querySelector("#p4").innerText = "☑";
+      document.querySelector("#p3").innerText = "_";
+      document.querySelector("#p5").innerText = "_";
+    } else if (place == 5) {
+      document.querySelector("#p5").innerText = "☑";
+      document.querySelector("#p4").innerText = "_";
+    }
+  }
+}
+
+function win() {
+  document.querySelector("#result").innerText = "CONGRATS, YOU WIN!!";
+  document.querySelector("#result").style.backgroundColor = "#588157";
+  document.querySelector("#result").style.display = "inline";
+  document.querySelector("#roll").style.display = "none";
+  document.querySelector("#reset").style.display = "inline";
+  wins++;
+  if (isBetting == 1) {
+    calculations();
+  }
+  document.querySelector("#wins").innerText = `Wins: ${wins}`;
+}
+
+function lose() {
+  document.querySelector("#result").innerText = "Better Luck Next Time. YOU LOST";
+  document.querySelector("#result").style.backgroundColor = "#AB3428";
+  document.querySelector("#result").style.display = "inline";
+  document.querySelector("#roll").style.display = "none";
+  document.querySelector("#reset").style.display = "inline";
+  losses++;
+  if (isBetting == 1) {
+    calculations();
+  }
+  document.querySelector("#losses").innerText = `Losses: ${losses}`;
+}
+
+function reset() {
+  resultMe = 99;
+  resultAI = 99;
+  place = 3;
+  isBetting = 0;
+  document.querySelector("#p1").innerText = "_";
+  document.querySelector("#p2").innerText = "_";
+  document.querySelector("#p3").innerText = "☑";
+  document.querySelector("#p4").innerText = "_";
+  document.querySelector("#p5").innerText = "_";
+  document.querySelector("#roll").style.display = "inline";
+  document.querySelector("#reset").style.display = "none";
+  document.querySelector("#result").innerText = "";
+  document.querySelector("#result").style.display = "none";
+  document.querySelector("#arrow").style.display = "none";
+  document.querySelector("#bet").style.display = "inline";
+}
+
+function gamble() {
+  if(balance == 0){
+    alert("You've done enough gambling for today. You have no money left");
+    document.querySelector("#bet").style.display = "none";
+  }else if (document.querySelector("#gamble").value > balance) {
+    alert("Too broke, enter smaller amount");
+  }else{
+    betting = document.querySelector("#gamble").value;
+  }
+  if (betting != "" && balance != 0) {
+    document.querySelector("#bet").style.display = "none";
+  }
+  if (betting > 0 && betting <= balance) {
+    isBetting = 1;
+  } else {
+    isBetting = 0;
+  }
+}
+
+function calculations() {
+  let mult = [2, 4, 6];
+  let randM = (Math.floor(Math.random() * 3) + 1) - 1;
+  let multiplier = mult[randM];
+  if(document.querySelector("#result").innerText == "CONGRATS, YOU WIN!!"){
+    balance += betting* multiplier;
+    document.querySelector("#balance").innerText = `Balance: ${balance}`;
+    alert(`You won big. Your new balance is ${balance}`);
+  }else if(document.querySelector("#result").innerText == "Better Luck Next Time. YOU LOST"){
+    balance = balance - betting;
+    document.querySelector("#balance").innerText = `Balance: ${balance}`;
+    alert(`Yikes, you lost ${betting}`);
+  }
+}
+
+
+
+</script>
+<style>
+    html {
+  height: 100%;
+  width: 100%;
+}
+body{
+  font-family: "Anta", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+nav{
+  background-color: #902923;
+}
+#row{
+  display: flex;
+  justify-content: space-evenly;
+  background-color: #f6f6f6;
+}
+@keyframes animation {
+  from {
+    letter-spacing: 32px;
+  }
+  to {
+    letter-spacing: 0.5;
+  }
+}
+#title{
+  font-size: 3em;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  white-space: nowrap;
+  animation: animation 2s ease;
+}
+#die{
+  height: 2em;
+  width: 2em;
+}
+#instructions{
+  font-size: 1.5em;
+}
+
+#gamble{
+  text-align: center;
+  border-top-left-radius: 1em;
+  border-bottom-left-radius: 1em;
+  border-top-right-radius: 1em;
+  border-bottom-right-radius: 1em;
+  height: 25px;
+  width: 250px;
+  font-size: 20px;
+}
+#bet{
+  height: 35px;
+  border-radius: 10%;
+  font-family: "Anta", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+#reset{
+border-radius: 10%;
+  height: 50px;
+  background-color: #255f85;
+  font-family: "Anta", sans-serif;
+  font-weight: 400;
+  font-size: 1.2em;
+  font-style: normal;
+}
+#roll{
+  height: 50px;
+  width: 75px;
+  font-size: 1.2em;
+  font-family: "Anta", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+label{
+  font-size: 2em;
+}
+#lines{
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 5em;
+}
+#arrow{
+  width: 150px;
+}
+#dice, #dice2, #dice3, #dice4{
+  width: 150px;
+}
+#result{
+  margin: 0 auto;
+  margin-bottom: 10px;
+  width: 650px;
+  padding: 10px;
+  border-top-left-radius: 1em;
+  border-bottom-left-radius: 1em;
+  border-top-right-radius: 1em;
+  border-bottom-right-radius: 1em;
+}
+#wl, #bID{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 5%;
+}
+#wins{
+  background-color: #588157;
+  /* border-top-left-radius: 1em;
+  border-bottom-left-radius: 1em; */
+  border-top-right-radius: 1em;
+  border-bottom-right-radius: 1em;
+}
+#losses{
+  background-color: #AB3428;
+  /* border-top-left-radius: 1em;
+  border-bottom-left-radius: 1em; */
+  border-top-right-radius: 1em;
+  border-bottom-right-radius: 1em;
+
+}
+</style>
+</body>
+
+</html>
