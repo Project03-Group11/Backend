@@ -4,16 +4,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.group11.shelftalk.models.Book;
 import com.group11.shelftalk.repository.BookRepository;
+import com.group11.shelftalk.service.BookService;
 
 @RestController
 @RequestMapping("api/book")
 public class BookController {
     @Autowired
     BookRepository bookRepository;
+
+    @Autowired
+    BookService bookService;
+
+    // This will be used to control the service. Should only be Ran once so afterwards it will be false
+    private boolean allowService = false;
 
     @CrossOrigin
     @PostMapping("/add")
@@ -32,7 +41,7 @@ public class BookController {
     }
 
     @CrossOrigin
-    @RequestMapping("/get-all")
+    @GetMapping("/get-all")
     public List<Book> getAll(){
         return bookRepository.findAll();
     }
@@ -63,5 +72,19 @@ public class BookController {
             return true;
         }
         return false;
+    }
+
+    @RequestMapping("/fetch-external-books")
+    public ResponseEntity<String> fetchExternalBooks() {
+        if (!allowService) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Service has already been run.");
+        }
+        try {
+            bookService.fetchAndSaveBooks();
+            allowService = false;  // Never allow after first use
+            return ResponseEntity.ok("Books fetched and saved successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch and save books: " + e.getMessage());
+        }
     }
 }
