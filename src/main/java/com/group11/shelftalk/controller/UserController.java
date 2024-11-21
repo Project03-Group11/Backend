@@ -38,13 +38,19 @@ public class UserController {
     }
 
     @CrossOrigin
-    @GetMapping("/get/{email}")
+    @GetMapping("/get/email/{email}")
     public User getByEmail(@PathVariable String email) {
         User response = userRepository.findByEmail(email);
         if(response == null){
             return null;
         }
         return response;
+    }
+
+    @CrossOrigin
+    @GetMapping("/get/{id}")
+    public User getById(@PathVariable Integer id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     @CrossOrigin
