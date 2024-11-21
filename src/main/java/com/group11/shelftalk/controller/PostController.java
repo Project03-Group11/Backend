@@ -87,6 +87,9 @@ public class PostController {
             if(body.containsKey("discussion")){
                 currPost.setDiscussion(body.get("discussion"));
             }
+            if(body.containsKey("likes")){
+                currPost.setLikes(Integer.parseInt(body.get("likes")));
+            }
             postRepository.save(currPost);
         }
         return currPost;
